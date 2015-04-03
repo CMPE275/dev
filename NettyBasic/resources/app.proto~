@@ -1,0 +1,10 @@
+
+option optimize_for = SPEED;
+option java_package = "poke.comm";
+
+
+
+
+message Request {
+    optional String msg = 1;
+ }
