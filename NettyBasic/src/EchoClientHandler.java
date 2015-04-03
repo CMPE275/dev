@@ -44,8 +44,7 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<Request> {
                 break;
             } catch (InterruptedException ignore) {
               System.out.println(ignore.toString());
-              System.out.print("abc");
-            }
+              }
         }
 
 	}
