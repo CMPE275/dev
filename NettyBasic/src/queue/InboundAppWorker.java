@@ -49,16 +49,8 @@ public class InboundAppWorker extends Thread {
 
 	@Override
 	public void run() {
-		
-		OneQueueEntry oneQueueEntry = sq.getInbound().getFirst();
-		Channel conn = oneQueueEntry.getChannel();
-		
-		Request request = oneQueueEntry.getReq();
-		
-		if (conn == null || !conn.isOpen()) {
-			logger.error("connection missing, no inbound communication");
-			return;
-		}
+		System.out.println("Inbound App worker started");
+
 
 		while (true) {
 			if (!forever && sq.getInbound().size() == 0)
@@ -66,7 +58,10 @@ public class InboundAppWorker extends Thread {
 
 			try {
 				// block until a message is enqueued
-				 oneQueueEntry = sq.getInbound().take();
+				OneQueueEntry oneQueueEntry = sq.getInbound().take();
+				Channel conn = oneQueueEntry.getChannel();
+				
+				Request request = oneQueueEntry.getReq();
 
 				// process request and enqueue response
 				if (oneQueueEntry.getReq() instanceof Request) {

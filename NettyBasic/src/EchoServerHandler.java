@@ -47,9 +47,8 @@ public class EchoServerHandler extends SimpleChannelInboundHandler<Request> {
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, Request arg1)
 			throws Exception {
-	//	System.out.println(arg1.getMsg());
 	
-		QueueFactory.getInstance().enqueueRequest(arg1, ctx.channel());
+		QueueFactory.getInstance().enqueueIn(arg1, ctx.channel());
 
 	
 	}
@@ -65,13 +64,6 @@ public class EchoServerHandler extends SimpleChannelInboundHandler<Request> {
 
 		@Override
 		public void operationComplete(ChannelFuture future) throws Exception {
-			// Note re-connecting to clients cannot be initiated by the server
-			// therefore, the server should remove all pending (queued) tasks. A
-			// more optimistic approach would be to suspend these tasks and move
-			// them into a separate bucket for possible client re-connection
-			// otherwise discard after some set period. This is a weakness of a
-			// connection-required communication design.
-
 			if (sq != null)
 				sq.shutdown(true);
 			sq = null;

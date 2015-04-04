@@ -20,10 +20,10 @@ import io.netty.channel.Channel;
 
 public class QueueFactory {
 
-	public static ChannelQueue getInstance() {
+	public static DiscreteQueue getInstance() {
 		// if a single queue is needed, this is where we would obtain a
 		// handle to it.
-		ChannelQueue queue = null;
+		DiscreteQueue queue = null;
 
 			queue = new DiscreteQueue();
 		

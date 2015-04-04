@@ -97,10 +97,17 @@ public class DiscreteQueue implements ChannelQueue {
 	private static ThreadGroup tgroup = new ThreadGroup("DiscreteQ-" + System.nanoTime());
 
 	protected DiscreteQueue() {
+		
+				
 		init();
 	}
 
 	private void init() {
+		oworker = new OutboundAppWorker(tgroup, 2, this);
+		iworker = new InboundAppWorker(tgroup, 1, this);
+		iworker.start();
+		oworker.start();
+		
 	}
 
 	@Override
@@ -193,7 +200,7 @@ public class DiscreteQueue implements ChannelQueue {
 	public void enqueueIn(Request req, Channel channel) {
 		try {
 			OneQueueEntry oqe = new OneQueueEntry(req, channel);
-
+			System.out.println(req.getMsg() + " Added to the queue");
 			inbound.put(oqe);
 		} catch (InterruptedException e) {
 			logger.error("message not enqueued for processing", e);

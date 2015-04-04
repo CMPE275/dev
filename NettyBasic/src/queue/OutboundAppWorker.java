@@ -64,8 +64,8 @@ public class OutboundAppWorker extends Thread {
 				if (conn.isWritable()) {
 					boolean rtn = false;
 					if (conn != null && conn.isOpen() && conn.isWritable()) {
-						ChannelFuture cf = conn.write(request);
-
+						ChannelFuture cf = conn.writeAndFlush(request);
+						
 						// blocks on write - use listener to be async
 						cf.awaitUninterruptibly();
 						rtn = cf.isSuccess();

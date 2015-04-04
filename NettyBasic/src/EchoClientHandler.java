@@ -39,9 +39,10 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<Request> {
     	channel.writeAndFlush(f.build());
     	for (;;) {
             try {
+            	
                 serverresponse = answer.take();
                 System.out.println(serverresponse.getMsg());
-                break;
+                        
             } catch (InterruptedException ignore) {
               System.out.println(ignore.toString());
             }
