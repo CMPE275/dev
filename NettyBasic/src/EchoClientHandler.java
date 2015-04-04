@@ -76,8 +76,5 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<Request> {
 		answer.add(arg1);
 
 		
-		
-		
-		
 	}
 }

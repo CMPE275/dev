@@ -1,7 +1,9 @@
+import java.io.File;
 import java.util.List;
 
 import javax.net.ssl.SSLException;
 
+import servers.*;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.bootstrap.Bootstrap;
@@ -9,6 +11,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -25,7 +28,23 @@ public final class MainClient extends Thread{
 
 	public static void main(String[] args) throws Exception {
 
-		stack = new ConcurrentLinkedQueue<String>();
+
+		Server server = new Server();
+		File confFile = new File(args[0]);
+
+		ServerConf servconf = server.parseConf(confFile);
+		
+		ArrayList<AdjacentNode> adjList = servconf.getAdjacentNodes();
+		
+		int port = adjList.get(0).getPort();
+		
+		String host = adjList.get(0).getHost();
+		
+		System.out.println(String.valueOf(port)+" "+ host);
+		
+		
+		
+//		stack = new ConcurrentLinkedQueue<String>();
 
 
 		final SslContext sslCtx;
@@ -42,7 +61,7 @@ public final class MainClient extends Thread{
 			.handler(new ClientInitializer(sslCtx));
 
 			// Make a new connection.
-			Channel ch = b.connect(HOST, PORT).sync().channel();
+			Channel ch = b.connect(host, port).sync().channel();
 
 			// Get the handler instance to initiate the request.
 			EchoClientHandler handler = ch.pipeline().get(EchoClientHandler.class);
@@ -52,8 +71,8 @@ public final class MainClient extends Thread{
 			handler.sendHi();
 
 			InBoundWorker inboundworker = new MainClient.InBoundWorker();
-			Thread thread=new Thread(inboundworker);
-			thread.start();
+			//Thread thread=new Thread(inboundworker);
+			//thread.start();
 
 			//  ch.close();
 
