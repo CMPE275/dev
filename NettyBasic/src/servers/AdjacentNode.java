@@ -1,13 +1,13 @@
 package servers;
 
 public class AdjacentNode {
-	int port;
-	int nodeId;
-	int mgmtport;
+	long port;
+	long nodeId;
+	long mgmtport;
 	String nodeName;
 	String host;
 	
-	public int getPort() {
+	public long getPort() {
 		return port;
 	}
 	public void setPort(int port) {

@@ -37,6 +37,7 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<Request> {
     	Request.Builder f = Request.newBuilder();
     	f.setMsg("Hi");
     	channel.writeAndFlush(f.build());
+    	
     	for (;;) {
             try {
             	
@@ -72,7 +73,7 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<Request> {
 	@Override
 	protected void channelRead0(ChannelHandlerContext arg0, Request arg1)
 			throws Exception {
-		System.out.println(arg1.getMsg());
+	//	System.out.println(arg1.getMsg());
 		
 		answer.add(arg1);
 

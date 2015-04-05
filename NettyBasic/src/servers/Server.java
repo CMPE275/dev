@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+
 //import org.codehaus.jackson.JsonGenerationException;
 //import org.codehaus.jackson.map.JsonMappingException;
 //import org.codehaus.jackson.map.ObjectMapper;
@@ -15,11 +16,14 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import Management.HeartbeatManager;
+
 public class Server {
 
 	public static ServerConf parseConf(File conf){
 
 		ServerConf serverConf = new ServerConf();
+		
 
 		try {
 			FileReader fileReader = new FileReader(conf);
@@ -49,6 +53,8 @@ public class Server {
 				serverConf.adjacentNodes.get(j).setPort(Integer.parseInt(innerObject.get("port").toString()));
 
 				j++;
+				
+				HeartbeatManager.initManager(serverConf);
 			}			
 
 		} catch (FileNotFoundException e) {

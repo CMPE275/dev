@@ -3,6 +3,7 @@ import java.util.List;
 
 import javax.net.ssl.SSLException;
 
+import Management.HeartbeatManager;
 import servers.*;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
@@ -24,11 +25,14 @@ public final class MainClient extends Thread{
 
 	static ConcurrentLinkedQueue<String> stack;
 
+	static HeartbeatManager heartbeatmgr;
 
 
 	public static void main(String[] args) throws Exception {
 
 
+		
+		
 		Server server = new Server();
 		File confFile = new File(args[0]);
 
@@ -36,12 +40,13 @@ public final class MainClient extends Thread{
 		
 		ArrayList<AdjacentNode> adjList = servconf.getAdjacentNodes();
 		
-		int port = adjList.get(0).getPort();
+		//int port = adjList.get(0).getPort();
 		
 		String host = adjList.get(0).getHost();
 		
-		System.out.println(String.valueOf(port)+" "+ host);
+		//System.out.println(String.valueOf(port)+" "+ host);
 		
+		 heartbeatmgr = HeartbeatManager.initManager(servconf);
 		
 		
 //		stack = new ConcurrentLinkedQueue<String>();
@@ -61,7 +66,7 @@ public final class MainClient extends Thread{
 			.handler(new ClientInitializer(sslCtx));
 
 			// Make a new connection.
-			Channel ch = b.connect(host, port).sync().channel();
+			Channel ch = b.connect("192.168.0.2", 8007).sync().channel();
 
 			// Get the handler instance to initiate the request.
 			EchoClientHandler handler = ch.pipeline().get(EchoClientHandler.class);
@@ -73,7 +78,8 @@ public final class MainClient extends Thread{
 			InBoundWorker inboundworker = new MainClient.InBoundWorker();
 			//Thread thread=new Thread(inboundworker);
 			//thread.start();
-
+			
+			
 			//  ch.close();
 
 

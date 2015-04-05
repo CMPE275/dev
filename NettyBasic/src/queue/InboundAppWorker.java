@@ -20,14 +20,17 @@ import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import queue.DiscreteQueue.OneQueueEntry;
 //import poke.comm.App.PokeStatus;
 import generated.App.Request;
 //import poke.server.resources.Resource;
 //import poke.server.resources.ResourceFactory;
 //import poke.server.resources.ResourceUtil;
+import Management.*;
 
+
+
+import Management.HeartbeatManager;
 
 import com.google.protobuf.GeneratedMessage;
 
@@ -67,18 +70,8 @@ public class InboundAppWorker extends Thread {
 				if (oneQueueEntry.getReq() instanceof Request) {
 					Request req = ((Request) oneQueueEntry.getReq());
 
-					// HEY! if you find yourself here and are tempted to add
-					// code to process state or requests then you are in the
-					// WRONG place! This is a general routing class, all
-					// request specific actions should take place in the
-					// resource!
-
-					// handle it locally - we create a new resource per
-					// request. This helps in thread isolation however, it
-					// creates creation burdens on the server. If
-					// we use a pool instead, we can gain some relief.
-
-			//		Resource rsc = ResourceFactory.getInstance().resourceInstance(req.getHeader());
+				
+				//Resource rsc = ResourceFactory.getInstance().resourceInstance(req.getHeader());
 
 					Request reply = null;
 //					if (rsc == null) {
@@ -91,16 +84,9 @@ public class InboundAppWorker extends Thread {
 //						// (reply).
 //					
 //					}
-					
-					Request.Builder reBuilder = Request.newBuilder();
-					reBuilder.setMsg("Replying to msg");
-					reply = reBuilder.build();					
-
-					if (reply != null)
-					{
-						//OneQueueEntry replyOneQueueEntry = new OneQueueEntry(reply, conn);
-						sq.enqueueResponse(reply,conn);
-					}
+					 HeartbeatManager heartbeatManager = HeartbeatManager.getInstance();
+					 
+					 heartbeatManager.processRequest(req,conn);
 				}
 
 			} catch (InterruptedException ie) {

@@ -1,5 +1,6 @@
 
 
+import Management.HeartbeatManager;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -19,6 +20,9 @@ public final class EchoServer {
     static final int PORT = Integer.parseInt(System.getProperty("port", "8007"));
 
     public static void main(String[] args) throws Exception {
+    	
+    	HeartbeatManager heartbeatmgr;
+    	
         // Configure SSL.
         final SslContext sslCtx;
         if (SSL) {
@@ -42,5 +46,6 @@ public final class EchoServer {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+     
     }
 }

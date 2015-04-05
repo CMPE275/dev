@@ -2,9 +2,19 @@
 option optimize_for = SPEED;
 option java_package = "poke.comm";
 
-
-
-
 message Request {
+    
     optional string msg = 1;
- }
+    optional int32 originator = 2;
+    optional int32 sendTo = 3;
+    optional int64 timeStamp = 4;
+    optional MessageType msgType = 5;
+    
+    
+    enum MessageType
+    {
+    HeartBeat = 1;  
+    }
+
+}
+ 

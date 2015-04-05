@@ -22,7 +22,7 @@ import queue.DiscreteQueue.OneQueueEntry;
 import generated.App.Request;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-
+import Management.*;
 import com.google.protobuf.GeneratedMessage;
 
 public class OutboundAppWorker extends Thread {
@@ -43,25 +43,23 @@ public class OutboundAppWorker extends Thread {
 
 	@Override
 	public void run() {
-		//Channel conn = sq.channel;
-		//		if (conn == null || !conn.isOpen()) {
-		//			PerChannelQueue.logger.error("connection missing, no outbound communication");
-		//			return;
-		//		}
+		
 		Request request;
 		Channel conn;
-
+		int count = 0;
 		while (true) {
 			if (!forever && sq.getOutbound().size() == 0)
 				break;
 
 			try {
+				
 				// block until a message is enqueued
 				OneQueueEntry oneQueueEntry = sq.getOutbound().take();
 				request = oneQueueEntry.getReq();
 				conn = oneQueueEntry.getChannel();
 
 				if (conn.isWritable()) {
+					System.out.println(++count);
 					boolean rtn = false;
 					if (conn != null && conn.isOpen() && conn.isWritable()) {
 						ChannelFuture cf = conn.writeAndFlush(request);
@@ -75,7 +73,9 @@ public class OutboundAppWorker extends Thread {
 
 					}
 				}else
-					sq.getOutbound().putFirst(oneQueueEntry);
+				{
+							sq.getOutbound().putFirst(oneQueueEntry);
+				}
 			} catch (InterruptedException ie) {
 				break;
 			} catch (Exception e) {
